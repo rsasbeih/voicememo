@@ -1,6 +1,13 @@
 import { Pressable, Text, View } from "react-native";
-
+import { useEffect } from "react";
+import { webSocketClient } from "./services/websocketService";
 export default function Index() {
+  useEffect(() => {
+    webSocketClient.connect();
+    return () => {
+      webSocketClient.disconnect();
+    };
+  }, []);
   return (
     <View
       style={{
@@ -12,6 +19,7 @@ export default function Index() {
       <Pressable
         onPress={() => {
           console.log("Pressed!");
+          webSocketClient.sendMessage("Hello from the client!");
         }}
         style={({ pressed }) => ({
           padding: 10,
