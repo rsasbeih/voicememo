@@ -1,6 +1,8 @@
 import { Pressable, Text, View } from "react-native";
 import { useEffect } from "react";
 import { webSocketClient } from "./services/websocketService";
+import { micService } from "./services/micService";
+
 export default function Index() {
   useEffect(() => {
     webSocketClient.connect();
@@ -17,8 +19,12 @@ export default function Index() {
       }}
     >
       <Pressable
-        onPress={() => {
+        onPress={async () => {
           console.log("Pressed!");
+          //only need to ask for mic access once
+          //after that, we reuse the same stream objects
+          //the browser and device remember which permission option we allowed last time
+          const stream = await micService.requestMicAccess();
           webSocketClient.sendMessage("Hello from the client!");
         }}
         style={({ pressed }) => ({
